@@ -22,7 +22,7 @@ api.nvim_create_augroup("AutoSave", {
 local global_vars = {}
 local last_undo_seq = vim.fn.getreginfo('"').undo_seq
 
-local function check_lest_command_undo()
+local function check_last_command_undo()
     local current_undo_seq = vim.fn.getreginfo('"').undo_seq
     last_undo_seq = current_undo_seq
     return (current_undo_seq ~= last_undo_seq)
@@ -62,7 +62,7 @@ local function debounce(lfn, duration)
 end
 
 function M.save(buf)
-    if check_lest_command_undo() then
+    if check_last_command_undo() then
         api.nvim.echo("Autosave skipped")
         return
     end
