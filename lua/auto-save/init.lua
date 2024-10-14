@@ -2,7 +2,6 @@ local M = {}
 
 --- @class Config
 local cnf = require("auto-save.config")
-local echo = require("auto-save.utils.echo")
 local autocmds = require("auto-save.utils.autocommands")
 
 local api = vim.api
@@ -155,10 +154,8 @@ end
 function M.toggle()
   if autosave_running then
     M.off()
-    echo("off")
   else
     M.on()
-    echo("on")
   end
 end
 

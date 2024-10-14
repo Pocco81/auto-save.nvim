@@ -65,10 +65,10 @@ use({
   "okuuva/auto-save.nvim",
   tag = 'v1*',
   config = function()
-   require("auto-save").setup {
+   require("auto-save").setup({
      -- your config goes here
      -- or just leave it empty :)
-   }
+   })
   end,
 })
 ```
@@ -78,10 +78,10 @@ use({
 ```vim
 Plug 'okuuva/auto-save.nvim', { 'tag': 'v1*' }
 lua << EOF
-  require("auto-save").setup {
+  require("auto-save").setup({
     -- your config goes here
     -- or just leave it empty :)
-  }
+  })
 EOF
 ```
 
@@ -124,7 +124,7 @@ It is also possible to pass a pattern to a trigger event, if you only want to ex
 {
   trigger_events = {
     immediate_save = {
-      { "BufLeave", pattern = {"*.c", "*.h"} }
+      { "BufLeave", pattern = { "*.c", "*.h" } }
     }
   }
 }
@@ -134,16 +134,15 @@ It is also possible to pass a pattern to a trigger event, if you only want to ex
 
 The `condition` field of the configuration allows the user to exclude **auto-save** from saving specific buffers.
 
-Here is an example using a helper function from `auto-save.utils.data` that disables auto-save for specified file types:
+Here is an example using a helper function that disables auto-save for specified file types:
 
 ```lua
 {
   condition = function(buf)
-    local fn = vim.fn
-    local utils = require("auto-save.utils.data")
+    local filetype = vim.fn.getbufvar(buf, "&filetype")
 
     -- don't save for `sql` file types
-    if utils.not_in(fn.getbufvar(buf, "&filetype"), {'sql'}) then
+    if vim.list_contains({ "sql" }, filetype) then
       return true
     end
     return false
@@ -156,8 +155,6 @@ You may also exclude `special-buffers` see (`:h buftype` and `:h special-buffers
 ```lua
 {
   condition = function(buf)
-    local fn = vim.fn
-
     -- don't save for special-buffers
     if fn.getbufvar(buf, "&buftype") ~= '' then
       return false
@@ -178,7 +175,7 @@ Besides running auto-save at startup (if you have `enabled = true` in your confi
 You may want to set up a key mapping for toggling:
 
 ```lua
-vim.api.nvim_set_keymap("n", "<leader>n", ":ASToggle<CR>", {})
+vim.api.nvim_set_keymap("n", "<leader>n", "<cmd>ASToggle<CR>", {})
 ```
 
 or as part of the `lazy.nvim` plugin spec:
@@ -187,7 +184,7 @@ or as part of the `lazy.nvim` plugin spec:
 {
   "okuuva/auto-save.nvim",
   keys = {
-    { "<leader>n", ":ASToggle<CR>", desc = "Toggle auto-save" },
+    { "<leader>n", "<cmd>ASToggle<CR>", desc = "Toggle auto-save" },
   },
   ...
 },
